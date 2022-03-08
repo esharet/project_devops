@@ -58,8 +58,9 @@ def push_all_repos_branch(repos: list[git.Repo], branch_name: str, *, create_ups
 
 def tag_all_repos_branch(repos: list[git.Repo], branch_name: str, *, tag_name: str, commit_msg: str) -> bool: 
     for repo in repos:
+        repo.git.checkout(branch_name)
         try:
-            repo.create_tag(tag_name, ref=repo.create_head(branch_name), message=commit_msg)
+            repo.create_tag(tag_name, ref=repo.active_branch, message=commit_msg)
         except git.GitCommandError:
             log.error(
                 f"git tag failed for repo {repo.working_tree_dir}, to branch '{branch_name}'", exc_info=True)
@@ -78,8 +79,15 @@ if __name__ == "__main__":
     #     print(f"for repo {repo.working_tree_dir} : ")
     #     print(repo.submodules)
     #     print("-----")
+    # -------------------------------
+
+    # test_git_workdir = "/home/user/projects/project_devops/test/test_repos_folder/gitpython_test_repo"
+    # repo = git.Repo(test_git_workdir)
+    # head = repo.active_branch
+    # print(head, type(head))
+    # ------------------------
 
     test_git_workdir = "/home/user/projects/project_devops/test/test_repos_folder/gitpython_test_repo"
     repo = git.Repo(test_git_workdir)
-    head = repo.active_branch
-    print(head, type(head))
+    tag_all_repos_branch([repo], "dev", tag_name="v0.0.2", commit_msg="only tagging test")
+    
