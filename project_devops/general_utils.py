@@ -37,7 +37,7 @@ def checkout_repos_to_new_branch(repos: list[git.Repo], branch_name: str, *, cre
             log.error(
                 f"git checkout failed for repo {repo.working_tree_dir}, to branch '{branch_name}'", exc_info=True)
             return False
-        return True
+    return True
 
 
 def push_all_repos_branch(repos: list[git.Repo], branch_name: str, *, create_upstream_with_this_branch_name: bool = False) -> bool: 
@@ -53,10 +53,10 @@ def push_all_repos_branch(repos: list[git.Repo], branch_name: str, *, create_ups
             log.error(
                 f"git push failed for repo {repo.working_tree_dir}, to branch '{branch_name}'", exc_info=True)
             return False
-        return True
+    return True
 
 
-def tag_all_repos_branch(repos: list[git.Repo], branch_name: str, *, tag_name: str, commit_msg: str) -> bool: 
+def tag_all_repos_branch(repos: list[git.Repo], branch_name: str, *, tag_name: str, commit_msg: str, push_to_remote: bool = False) -> bool: 
     for repo in repos:
         repo.git.checkout(branch_name)
         try:
@@ -65,7 +65,8 @@ def tag_all_repos_branch(repos: list[git.Repo], branch_name: str, *, tag_name: s
             log.error(
                 f"git tag failed for repo {repo.working_tree_dir}, to branch '{branch_name}'", exc_info=True)
             return False
-        return True
+        
+    return True
         
 if __name__ == "__main__":
     # p = argparse.ArgumentParser()
