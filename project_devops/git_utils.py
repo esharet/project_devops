@@ -1,9 +1,7 @@
 import logging
 import argparse
 import os
-from sys import exc_info
 import git
-from prettytable import PrettyTable
 
 log = logging.getLogger()
 logging.basicConfig(level=logging.INFO)

@@ -1,7 +1,7 @@
 import unittest
 import git
 import os
-import project_devops.general_utils as git_utils
+import project_devops.git_utils as git_utils
 
 class GeneralUtilsTest(unittest.TestCase): 
 
