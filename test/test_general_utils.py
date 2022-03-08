@@ -24,6 +24,10 @@ class GeneralUtilsTest(unittest.TestCase):
         checkout_success = git_utils.checkout_repos_to_new_branch([test_repo], "dev") 
         self.assertTrue(checkout_success, "checkout to branch failed ! ")
 
+    def test_push_branch(self,): 
+        test_repo = git.Repo(os.path.join(self.base_dir, "gitpython_test_repo"))
+        checkout_success = git_utils.push_all_repos_branch([test_repo], "dev", create_upstream_with_this_branch_name=True) 
+        self.assertTrue(checkout_success, "pushing branch failed ! ")
     
 
 if __name__ == '__main__':

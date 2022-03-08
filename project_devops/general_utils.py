@@ -40,19 +40,36 @@ def checkout_repos_to_new_branch(repos: list[git.Repo], branch_name: str, *, cre
         return True
 
 
-def get_submodules(repo: git.Repo):
-    return(repo.submodules)
+def push_all_repos_branch(repos: list[git.Repo], branch_name: str, *, create_upstream_with_this_branch_name: bool = False) -> bool: 
+    for repo in repos:
+        assert repo.remotes.origin.exists()
+        repo.git.checkout(branch_name)
+        try:
+            if create_upstream_with_this_branch_name:
+                repo.git.push('--set-upstream', 'origin', repo.active_branch)
+            else:
+                repo.remotes.origin.push().raise_if_error()
+        except git.GitCommandError:
+            log.error(
+                f"git push failed for repo {repo.working_tree_dir}, to branch '{branch_name}'", exc_info=True)
+            return False
+        return True
 
 
 if __name__ == "__main__":
-    p = argparse.ArgumentParser()
-    p.add_argument("base_dir")
-    args = p.parse_args()
+    # p = argparse.ArgumentParser()
+    # p.add_argument("base_dir")
+    # args = p.parse_args()
 
-    repos = find_all_repos_in_directory(args.base_dir)
-    print(f"all repos: {repos}")
-    print("-------")
-    for repo in repos:
-        print(f"for repo {repo.working_tree_dir} : ")
-        print(repo.submodules)
-        print("-----")
+    # repos = find_all_repos_in_directory(args.base_dir)
+    # print(f"all repos: {repos}")
+    # print("-------")
+    # for repo in repos:
+    #     print(f"for repo {repo.working_tree_dir} : ")
+    #     print(repo.submodules)
+    #     print("-----")
+
+    test_git_workdir = "/home/user/projects/project_devops/test/test_repos_folder/gitpython_test_repo"
+    repo = git.Repo(test_git_workdir)
+    head = repo.active_branch
+    print(head, type(head))
