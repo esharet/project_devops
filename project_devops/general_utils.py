@@ -8,6 +8,7 @@ from prettytable import PrettyTable
 log = logging.getLogger()
 logging.basicConfig(level=logging.INFO)
 
+
 def find_all_repos_in_directory(dir: str) -> list[git.Repo]:
     """
     find all repositories inside a directory
@@ -40,7 +41,7 @@ def checkout_repos_to_new_branch(repos: list[git.Repo], branch_name: str, *, cre
     return True
 
 
-def push_all_repos_branch(repos: list[git.Repo], branch_name: str, *, create_upstream_with_this_branch_name: bool = False) -> bool: 
+def push_all_repos_branch(repos: list[git.Repo], branch_name: str, *, create_upstream_with_this_branch_name: bool = False) -> bool:
     for repo in repos:
         assert repo.remotes.origin.exists()
         repo.git.checkout(branch_name)
@@ -56,18 +57,21 @@ def push_all_repos_branch(repos: list[git.Repo], branch_name: str, *, create_ups
     return True
 
 
-def tag_all_repos_branch(repos: list[git.Repo], branch_name: str, *, tag_name: str, commit_msg: str, push_to_remote: bool = False) -> bool: 
+def tag_all_repos_branch(repos: list[git.Repo], branch_name: str, *, tag_name: str, commit_msg: str, push_to_remote: bool = False) -> bool:
     for repo in repos:
         repo.git.checkout(branch_name)
         try:
-            repo.create_tag(tag_name, ref=repo.active_branch, message=commit_msg)
+            repo.create_tag(tag_name, ref=repo.active_branch,
+                            message=commit_msg)
+            if push_to_remote: 
+                repo.remotes.origin.push(tag_name)
         except git.GitCommandError:
             log.error(
                 f"git tag failed for repo {repo.working_tree_dir}, to branch '{branch_name}'", exc_info=True)
             return False
-        
     return True
-        
+
+
 if __name__ == "__main__":
     # p = argparse.ArgumentParser()
     # p.add_argument("base_dir")
@@ -90,5 +94,5 @@ if __name__ == "__main__":
 
     test_git_workdir = "/home/user/projects/project_devops/test/test_repos_folder/gitpython_test_repo"
     repo = git.Repo(test_git_workdir)
-    tag_all_repos_branch([repo], "dev", tag_name="v0.0.2", commit_msg="only tagging test")
-    
+    tag_all_repos_branch([repo], "dev", tag_name="v0.0.3",
+                         commit_msg="only tagging test", push_to_remote=True)
