@@ -25,7 +25,7 @@ if __name__ == "__main__":
 	for repo in repos:
 		print("Checking repo %s" % repo.working_tree_dir)
 		try:
-			if repo.is_dirty:
+			if repo.is_dirty():
 				dirty.append(repo)
 			else:
 				clean.append(repo)
