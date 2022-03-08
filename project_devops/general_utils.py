@@ -56,6 +56,16 @@ def push_all_repos_branch(repos: list[git.Repo], branch_name: str, *, create_ups
         return True
 
 
+def tag_all_repos_branch(repos: list[git.Repo], branch_name: str, *, tag_name: str, commit_msg: str) -> bool: 
+    for repo in repos:
+        try:
+            repo.create_tag(tag_name, ref=repo.create_head(branch_name), message=commit_msg)
+        except git.GitCommandError:
+            log.error(
+                f"git tag failed for repo {repo.working_tree_dir}, to branch '{branch_name}'", exc_info=True)
+            return False
+        return True
+        
 if __name__ == "__main__":
     # p = argparse.ArgumentParser()
     # p.add_argument("base_dir")
