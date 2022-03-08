@@ -23,6 +23,8 @@ def find_all_repos_in_directory(dir: str) -> list[git.Repo]:
 
     return repos
 
+def are_all_repos_clean(repos: list[git.Repo]): 
+    return [False] * len(repos) == [repo.is_dirty() for repo in repos]
 
 def checkout_repos_to_new_branch(repos: list[git.Repo], branch_name: str, *, create_new_branch: bool = False) -> bool:
     """
@@ -94,5 +96,6 @@ if __name__ == "__main__":
 
     test_git_workdir = "/home/user/projects/project_devops/test/test_repos_folder/gitpython_test_repo"
     repo = git.Repo(test_git_workdir)
-    tag_all_repos_branch([repo], "dev", tag_name="v0.0.3",
-                         commit_msg="only tagging test", push_to_remote=True)
+    # tag_all_repos_branch([repo], "dev", tag_name="v0.0.3",# 
+    #                      commit_msg="only tagging test", push_to_remote=True)
+    print(are_all_repos_clean([repo]))

@@ -24,11 +24,15 @@ class GeneralUtilsTest(unittest.TestCase):
         checkout_success = git_utils.checkout_repos_to_new_branch([test_repo], "dev") 
         self.assertTrue(checkout_success, "checkout to branch failed ! ")
 
-    def test_tag_branch(self,): 
-        test_repo = git.Repo(os.path.join(self.base_dir, "gitpython_test_repo"))
-        checkout_success = git_utils.tag_all_repos_branch([test_repo], "dev", tag_name="v0.0.1", commit_msg="tagged with gitpython! ") 
-        self.assertTrue(checkout_success, "pushing branch failed ! ")
+    # def test_tag_branch(self,): 
+    #     test_repo = git.Repo(os.path.join(self.base_dir, "gitpython_test_repo"))
+    #     checkout_success = git_utils.tag_all_repos_branch([test_repo], "dev", tag_name="v0.0.1", commit_msg="tagged with gitpython! ") 
+    #     self.assertTrue(checkout_success, "pushing branch failed ! ")
     
+    def test_are_all_repos_clean(self,): 
+        test_repo = git.Repo(os.path.join(self.base_dir, "gitpython_test_repo"))
+        repos_are_clean = git_utils.are_all_repos_clean([test_repo])
+        self.assertTrue(repos_are_clean, "not all repos are clean")
 
 if __name__ == '__main__':
     unittest.main()
